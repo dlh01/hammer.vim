@@ -15,8 +15,7 @@ module Hammer
         "erb",
         "shellwords",
         "github/markup",
-        "tilt",
-        "albino"
+        "tilt"
       ]
     end
 
@@ -83,9 +82,10 @@ module Hammer
     #
     def open_browser path
       browser_path = Shellwords.escape(Hammer::ENV.browser)
+      browser_args = Hammer::ENV.browser_args
       file_path    = Shellwords.escape(path)
 
-      Vim.command "silent ! #{browser_path} #{file_path}"
+      Vim.command "silent ! #{browser_path} #{browser_args} #{file_path}"
       Vim.command "redraw!"
     end
 
@@ -116,7 +116,7 @@ module Hammer
       File.open path, 'w' do |f|
         tilt = Tilt.new(Hammer::ENV.template)
         output = tilt.render do
-          GitHub::Markup.render(buffer.basename, buffer[0..-1])
+          GitHub::Markup.render(buffer.basename, buffer[1..-1])
         end
 
         f.write(output)
